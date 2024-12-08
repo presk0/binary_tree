@@ -1,30 +1,44 @@
-NAME := btree.a
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: nidionis <nidionis@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/03/02 15:16:38 by supersko          #+#    #+#              #
+#    Updated: 2024/12/08 19:29:47 by nidionis         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-CC := cc
-CFLAGS := -Wextra -Wall -Werror -Wunreachable-code -Ofast
+SRC_DIR = src
+FILES = ft_btree.c
+SRCS = $(addprefix $(SRC_DIR)/, $(FILES))
 
-SRCS := ft_btree.c
-OBJS := $(SRCS:.c=.o)
+OBJS = ${SRCS:.c=.o}
 
-all: $(NAME)
+OBJ_FILES = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+NAME = btree.a
+
+CFLAGS = -Wall -Wextra -Werror
+
+CC = cc
+
+all: ${NAME}
+
+${NAME}: ${OBJS}
+	@ar rcs $@ $?
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+	${CC} ${CFLAGS} -c $< -o $@
 
-$(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-
-debug: $(OBJS)
-	@$(CC) -g src/*.c -o pouet
-	lldb pouet
-	rm pouet
+test:
+	gcc *.c 
 
 clean:
-	@rm -rf $(OBJS)
+	rm -rf ${OBJS} ${OBJS_BONUS}
 
 fclean: clean
-	@rm -f $(NAME)
+	rm -rf ${NAME}
 
 re: fclean all
-
-.PHONY: all clean fclean re
